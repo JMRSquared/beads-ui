@@ -87,25 +87,39 @@ export function createEpicsView(
     return html`
       <div class="epic-group" data-epic-id=${id}>
         <div
-          class="epic-header"
+          class="epic-header ${is_open ? 'is-open' : ''}"
           @click=${() => toggle(id)}
           role="button"
           tabindex="0"
           aria-expanded=${is_open}
         >
+          <svg
+            class="epic-chevron"
+            viewBox="0 0 16 16"
+            width="16"
+            height="16"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M6 4l4 4-4 4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
           ${createIssueIdRenderer(id, { class_name: 'mono' })}
-          <span class="text-truncate" style="margin-left:8px"
+          <span class="epic-title text-truncate"
             >${epic.title || '(no title)'}</span
           >
-          <span
-            class="epic-progress"
-            style="margin-left:auto; display:flex; align-items:center; gap:8px;"
-          >
+          <span class="epic-progress">
             <progress
               value=${Number(g.closed_children || 0)}
               max=${Math.max(1, Number(g.total_children || 0))}
             ></progress>
-            <span class="muted mono"
+            <span class="muted mono epic-progress__count"
               >${g.closed_children}/${g.total_children}</span
             >
           </span>

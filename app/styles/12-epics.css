@@ -1,42 +1,115 @@
 /* Epics view styles */
 .epic-group {
   border: 1px solid var(--border);
-  border-radius: 6px;
-  margin: 10px 12px;
+  border-radius: var(--radius-lg);
+  margin: var(--space-4) var(--space-6);
   overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow-xs);
 }
 
 /* UI-83: Issues table container aligns with epics/cards */
 .issues-block {
   border: 1px solid var(--border);
-  border-radius: 6px;
-  margin: 0px 12px;
+  border-radius: var(--radius-lg);
+  margin: 0 var(--space-6);
   overflow: hidden;
-  background: var(--bg);
+  background: var(--surface);
 }
+
 .epic-header {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-3);
   padding: var(--space-5) var(--space-6);
   cursor: pointer;
-  background: color-mix(in srgb, var(--panel-bg) 90%, transparent);
-  border-bottom: 1px solid var(--border);
+  background: var(--surface-sunken);
+  border-bottom: 1px solid transparent;
+  transition:
+    background var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out);
 
   &:hover {
-    background: color-mix(in srgb, var(--control-bg) 60%, transparent);
+    background: color-mix(
+      in srgb,
+      var(--surface-sunken) 60%,
+      var(--accent-subtle)
+    );
   }
 
-  /* Compact native progress for epic status */
-  progress {
-    width: 140px;
-    height: 8px;
-    accent-color: var(--status-closed-base);
+  &:focus-visible {
+    outline: 2px solid var(--accent-ring);
+    outline-offset: -2px;
+  }
+
+  /* Expanded: divider becomes visible to separate from children */
+  &.is-open {
+    border-bottom-color: var(--border);
   }
 }
-.epic-children {
-  padding: 8px 12px 12px;
+
+/* Chevron expand affordance */
+.epic-chevron {
+  flex: 0 0 auto;
+  color: var(--muted);
+  transition:
+    transform var(--dur-3) var(--ease-spring),
+    color var(--dur-2) var(--ease-out);
 }
+.epic-header:hover .epic-chevron {
+  color: var(--fg);
+}
+.epic-header.is-open .epic-chevron {
+  transform: rotate(90deg);
+  color: var(--accent);
+}
+
+.epic-title {
+  margin-left: var(--space-1);
+  font-weight: var(--weight-medium);
+}
+
+/* Progress cluster pinned to the right */
+.epic-progress {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.epic-progress__count {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* Modern slim progress bar driven by --accent */
+.epic-header progress {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 140px;
+  height: 6px;
+  border: none;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: var(--surface-sunken);
+}
+.epic-header progress::-webkit-progress-bar {
+  background: color-mix(in srgb, var(--fg) 12%, transparent);
+  border-radius: var(--radius-full);
+}
+.epic-header progress::-webkit-progress-value {
+  background: var(--accent);
+  border-radius: var(--radius-full);
+  transition: width var(--dur-3) var(--ease-out);
+}
+.epic-header progress::-moz-progress-bar {
+  background: var(--accent);
+  border-radius: var(--radius-full);
+}
+
+.epic-children {
+  padding: var(--space-2) var(--space-4) var(--space-4);
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -45,7 +118,7 @@
   th,
   td {
     text-align: left;
-    padding: var(--space-6) var(--space-8);
+    padding: var(--space-4) var(--space-5);
     border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
   }
   /* Ensure form controls fill the cell */
@@ -61,11 +134,22 @@
     }
   }
   th {
-    font-size: 12px;
+    font-size: var(--text-sm);
     color: var(--muted);
-    font-weight: 600;
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    border-bottom-color: var(--border);
+  }
+  /* Last row sits flush against the card edge */
+  tbody tr:last-child td {
+    border-bottom: none;
   }
 }
+
+.epic-row {
+  transition: background var(--dur-2) var(--ease-out);
+}
 .epic-row:hover {
-  background: color-mix(in srgb, var(--control-bg) 55%, transparent);
+  background: var(--accent-subtle);
 }
