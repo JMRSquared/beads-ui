@@ -1,7 +1,7 @@
 /* Dependency indicators column */
 .deps-col {
   text-align: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   white-space: nowrap;
 }
 .deps-indicator {
@@ -13,9 +13,8 @@
 .dep-count,
 .dependent-count {
   color: var(--muted);
-  font-family:
-    ui-monospace, 'SF Mono', Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', Menlo, Consolas, 'Courier New', monospace;
+  font-family: var(--font-mono);
+  transition: color var(--dur-2) var(--ease-out);
 }
 .dep-count:hover,
 .dependent-count:hover {
