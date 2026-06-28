@@ -1,0 +1,96 @@
+/* --- Issue Details Dialog (UI-104) --- */
+#issue-dialog {
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+  width: min(96vw, 1200px);
+  max-height: 96vh;
+  margin: 2vh auto;
+  overflow: hidden;
+}
+#issue-dialog::backdrop {
+  background: color-mix(in srgb, #000 45%, transparent);
+  backdrop-filter: blur(1px);
+}
+.issue-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.issue-dialog__title {
+  font-weight: 700;
+}
+.issue-dialog__close {
+  border-radius: 4px;
+  padding: 4px 8px;
+  min-width: 28px;
+  line-height: 1.2;
+}
+.issue-dialog__body {
+  min-height: 200px;
+  max-height: calc(96vh - 44px);
+  overflow: auto;
+}
+
+.new-issue__body {
+  padding: 12px;
+}
+.new-issue__form {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 10px 12px;
+  align-items: center;
+}
+.new-issue__form label {
+  color: var(--muted);
+  font-size: 12px;
+}
+.new-issue__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+.new-issue__error {
+  color: var(--danger, #b00020);
+  font-size: 12px;
+}
+
+/* --- New Issue Dialog (UI-106) --- */
+#new-issue-dialog {
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+  width: min(640px, 96vw);
+  max-height: 96vh;
+  margin: 2vh auto;
+  overflow: hidden;
+}
+#new-issue-dialog::backdrop {
+  background: color-mix(in srgb, #000 45%, transparent);
+  backdrop-filter: blur(1px);
+}
+.new-issue__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.new-issue__title {
+  font-weight: 700;
+}
+.new-issue__close {
+  border-radius: 4px;
+  padding: 4px 8px;
+  min-width: 28px;
+  line-height: 1.2;
+}

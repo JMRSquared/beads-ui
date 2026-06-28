@@ -1,0 +1,130 @@
+/* Board view styles */
+.board-root {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-8);
+  padding: var(--space-6);
+}
+.board-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 380px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--panel-bg) 92%, transparent);
+}
+.board-column__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 10px 12px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+  background: inherit;
+  backdrop-filter: saturate(140%) blur(4px);
+}
+.board-column__title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.board-column__title-text {
+  font-weight: inherit;
+}
+.board-column__count {
+  background: color-mix(in srgb, var(--panel-bg) 88%, var(--muted));
+  color: color-mix(in srgb, var(--muted) 82%, #000);
+  border-color: color-mix(in srgb, var(--muted) 28%, transparent);
+  min-width: 28px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+/* Small, unobtrusive select for closed filter */
+.board-closed-filter {
+  margin: calc(var(--space-4) * -1) 0;
+
+  select {
+    font-size: 13px;
+    border-radius: 999px;
+    border-color: var(--border);
+    padding: 2px 18px 2px 12px;
+  }
+}
+.board-column__body {
+  padding: var(--space-5);
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  /* UI-77: increase vertical spacing between card rows */
+  gap: var(--space-7);
+}
+.board-card {
+  /* UI-76: remove borders and match page body background */
+  border: none;
+  border-radius: 6px;
+  /* UI-77: increase internal padding for readability */
+  padding: var(--space-6) var(--space-7);
+  /* Match the body background so cards feel integrated */
+  background: var(--bg);
+  cursor: pointer;
+  transition:
+    box-shadow 140ms ease,
+    transform 140ms ease;
+  /* UI-76: subtle elevation without borders */
+  box-shadow:
+    0 1px 2px color-mix(in srgb, #000 10%, transparent),
+    0 2px 6px color-mix(in srgb, #000 8%, transparent);
+}
+.board-card:hover {
+  /* Keep background; emphasize elevation slightly on hover */
+  box-shadow:
+    0 2px 8px color-mix(in srgb, #000 16%, transparent),
+    0 4px 16px color-mix(in srgb, #000 12%, transparent);
+}
+.board-card:focus {
+  outline: 2px solid color-mix(in srgb, var(--link) 50%, transparent);
+  outline-offset: var(--outline-offset-s);
+}
+.board-card__title {
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+.board-card__meta {
+  margin-top: var(--space-4);
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* Drag and drop styles */
+.board-card--dragging {
+  opacity: 0.5;
+  transform: rotate(2deg);
+  box-shadow:
+    0 4px 16px color-mix(in srgb, #000 24%, transparent),
+    0 8px 32px color-mix(in srgb, #000 16%, transparent);
+}
+
+.board-column--drag-over {
+  background: color-mix(in srgb, var(--link) 8%, var(--panel-bg));
+  border-color: color-mix(in srgb, var(--link) 40%, var(--border));
+}
+
+.board-column--drag-over .board-column__body {
+  min-height: 100px;
+}
+
+@media (max-width: 1100px) {
+  .board-root {
+    grid-template-columns: 1fr;
+  }
+}

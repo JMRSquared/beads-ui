@@ -63,6 +63,7 @@
   "files": [
     "app/index.html",
     "app/styles.css",
+    "app/styles",
     "app/main.bundle.js",
     "app/main.bundle.js.map",
     "app/protocol.js",

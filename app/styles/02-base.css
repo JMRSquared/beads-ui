@@ -1,0 +1,40 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+/* Ensure the HTML hidden attribute wins over any display rules we set on routes */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  color: var(--fg);
+  background: var(--bg);
+  font-family:
+    -apple-system,
+    system-ui,
+    Segoe UI,
+    Roboto,
+    Ubuntu,
+    Cantarell,
+    Noto Sans,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: 0.01em;
+}
+
+a {
+  color: var(--link);
+
+  &:visited {
+    color: var(--link-visited);
+  }
+  &:hover,
+  &:focus {
+    color: var(--link-hover);
+  }
+}

@@ -1,0 +1,46 @@
+/* Detail content paddings */
+#detail-root {
+  padding: 18px;
+}
+
+/* Spacing for acceptance and notes sections in details */
+#detail-root .acceptance,
+#detail-root .design,
+#detail-root .notes {
+  margin-top: 32px;
+}
+/* Keep editor font sizes consistent with read mode */
+#detail-root input[type='text'],
+#detail-root textarea {
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+/* Title input fills available width and stays inline with buttons */
+#detail-root .detail-title h2 {
+  display: flex;
+  align-items: center;
+}
+#detail-root .detail-title h2 input[type='text'] {
+  flex: 1;
+  padding: 0;
+  min-width: 10px;
+  font-size: inherit;
+  line-height: inherit;
+  margin-right: 8px;
+}
+/* Remove borders in detail view; rely on global :focus-visible outline */
+#detail-root input[type='text'],
+#detail-root textarea {
+  border: none;
+  background: transparent;
+  outline: 2px solid var(--control-border, var(--border));
+  outline-offset: var(--outline-offset-l);
+}
+#detail-root input[type='text']:focus,
+#detail-root textarea:focus {
+  border: none;
+  box-shadow: none;
+  outline: 2px solid color-mix(in srgb, var(--link) 60%, transparent);
+}

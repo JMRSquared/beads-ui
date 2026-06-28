@@ -1,0 +1,66 @@
+/* Inline, minimal text input for table editing */
+input.inline-edit {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  line-height: inherit;
+  font: inherit;
+  outline: 2px solid var(--control-border, var(--border));
+  outline-offset: var(--outline-offset);
+}
+input.inline-edit:focus {
+  outline: 2px solid color-mix(in srgb, var(--link) 50%, transparent);
+  outline-offset: var(--outline-offset-l);
+  box-shadow: none;
+}
+
+#list-panel .panel__header input[type='search'] {
+  flex: 1;
+}
+
+/* Issues list polish */
+#list-panel .panel__body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#list-panel .panel__body li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px 10px;
+  padding: 10px 18px;
+  margin: 0;
+  border-radius: 8px;
+  transition:
+    background 140ms ease,
+    transform 80ms ease,
+    box-shadow 140ms ease;
+}
+#list-panel .panel__body li:hover {
+  background: color-mix(in srgb, var(--control-bg) 60%, transparent);
+}
+#list-panel .panel__body li.selected {
+  background: color-mix(in srgb, var(--link) 10%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--link) 35%, var(--border)) inset;
+}
+#list-panel .panel__body li .muted {
+  font-size: 12px;
+}
+
+/* Details typography */
+#detail-panel .panel__body {
+  line-height: 1.5;
+}
+#detail-panel .panel__body h1,
+#detail-panel .panel__body h2,
+#detail-panel .panel__body h3 {
+  letter-spacing: 0.01em;
+}
+
+/* Keyboard focus ring helper */
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--link) 60%, transparent);
+  outline-offset: var(--outline-offset-m);
+}

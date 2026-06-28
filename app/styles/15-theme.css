@@ -1,0 +1,186 @@
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #e5e7eb;
+    --bg: #0b1021;
+    --muted: #9ca3af;
+    --panel-bg: #0f172a;
+    --border: #1f2937;
+
+    /* Dark variants derived via color-mix for contrast */
+    --badge-bg-neutral: color-mix(in srgb, var(--panel-bg) 80%, #9ca3af);
+    --badge-fg-neutral: color-mix(in srgb, #9ca3af 75%, #fff);
+    --badge-bg-bug: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-bug-base)
+    );
+    --badge-fg-bug: color-mix(in srgb, var(--type-bug-base) 75%, #fff);
+    --badge-bg-feature: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-feature-base)
+    );
+    --badge-fg-feature: color-mix(in srgb, var(--type-feature-base) 75%, #fff);
+    --badge-bg-task: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-task-base)
+    );
+    --badge-fg-task: color-mix(in srgb, var(--type-task-base) 75%, #fff);
+    --badge-bg-epic: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-epic-base)
+    );
+    --badge-fg-epic: color-mix(in srgb, var(--type-epic-base) 75%, #fff);
+    --badge-bg-chore: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-chore-base)
+    );
+    --badge-fg-chore: color-mix(in srgb, var(--type-chore-base) 75%, #fff);
+
+    --link: #93c5fd;
+    --link-hover: #bfdbfe;
+    --link-visited: #c4b5fd;
+
+    --code-bg: #1f2937;
+    --code-fg: #e5e7eb;
+    --pre-bg: #0a0f1f;
+    --pre-fg: #e5e7eb;
+  }
+}
+
+/* Manual theme override */
+html[data-theme='dark'] {
+  --fg: #e5e7eb;
+  --bg: #0b1021;
+  --muted: #9ca3af;
+  --panel-bg: #0f172a;
+  --border: #1f2937;
+
+  --badge-bg-neutral: #374151;
+  --badge-fg-neutral: #f3f4f6;
+  --badge-bg-bug: color-mix(in srgb, var(--panel-bg) 80%, var(--type-bug-base));
+  --badge-fg-bug: color-mix(in srgb, var(--type-bug-base) 75%, #fff);
+  --badge-bg-feature: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--type-feature-base)
+  );
+  --badge-fg-feature: color-mix(in srgb, var(--type-feature-base) 75%, #fff);
+  --badge-bg-task: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--type-task-base)
+  );
+  --badge-fg-task: color-mix(in srgb, var(--type-task-base) 75%, #fff);
+  --badge-bg-epic: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--type-epic-base)
+  );
+  --badge-fg-epic: color-mix(in srgb, var(--type-epic-base) 75%, #fff);
+  --badge-bg-chore: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--type-chore-base)
+  );
+  --badge-fg-chore: color-mix(in srgb, var(--type-chore-base) 75%, #fff);
+
+  --link: #93c5fd;
+  --link-hover: #bfdbfe;
+  --link-visited: #c4b5fd;
+
+  --code-bg: #1f2937;
+  --code-fg: #e5e7eb;
+  --pre-bg: #0a0f1f;
+  --pre-fg: #e5e7eb;
+}
+
+/* Force light theme when OS prefers dark */
+html[data-theme='light'] {
+  --fg: #222;
+  --bg: #fff;
+  --muted: #666;
+  --panel-bg: #fafafa;
+  --border: #e5e7eb;
+
+  --badge-bg-neutral: #e5e7eb;
+  --badge-fg-neutral: #374151;
+  --badge-bg-bug: color-mix(in srgb, var(--panel-bg) 85%, var(--type-bug-base));
+  --badge-fg-bug: color-mix(in srgb, var(--type-bug-base) 90%, #000);
+  --badge-bg-feature: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-feature-base)
+  );
+  --badge-fg-feature: color-mix(in srgb, var(--type-feature-base) 90%, #000);
+  --badge-bg-task: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-task-base)
+  );
+  --badge-fg-task: color-mix(in srgb, var(--type-task-base) 90%, #000);
+  --badge-bg-epic: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-epic-base)
+  );
+  --badge-fg-epic: color-mix(in srgb, var(--type-epic-base) 90%, #000);
+  --badge-bg-chore: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-chore-base)
+  );
+  --badge-fg-chore: color-mix(in srgb, var(--type-chore-base) 90%, #000);
+
+  --link: #1d4ed8;
+  --link-hover: #1e40af;
+  --link-visited: #6d28d9;
+
+  --code-bg: #f3f4f6;
+  --code-fg: #1f2937;
+  --pre-bg: #0b1021;
+  --pre-fg: #e5e7eb;
+
+  /* Light controls override to prevent dark OS bleed-through */
+  --control-bg: #fff;
+  --control-fg: #111827;
+  --control-border: #d1d5db;
+  --control-placeholder: #9ca3af;
+  --button-bg: #f3f4f6;
+  --button-fg: #111827;
+  --button-border: #d1d5db;
+}
+
+/* Controls palette (light defaults) */
+:root {
+  --control-bg: #fff;
+  --control-fg: #111827;
+  --control-border: #d1d5db;
+  --control-placeholder: #9ca3af;
+  --button-bg: #f3f4f6;
+  --button-fg: #111827;
+  --button-border: #d1d5db;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --control-bg: #111827;
+    --control-fg: #e5e7eb;
+    --control-border: #374151;
+    --control-placeholder: #9ca3af;
+    --button-bg: #1f2937;
+    --button-fg: #e5e7eb;
+    --button-border: #374151;
+  }
+}
+html[data-theme='dark'] {
+  --control-bg: #111827;
+  --control-fg: #e5e7eb;
+  --control-border: #374151;
+  --control-placeholder: #9ca3af;
+  --button-bg: #1f2937;
+  --button-fg: #e5e7eb;
+  --button-border: #374151;
+}
