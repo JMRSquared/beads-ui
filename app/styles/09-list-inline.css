@@ -1,22 +1,30 @@
 /* Inline, minimal text input for table editing */
 input.inline-edit {
   border: none;
-  background: transparent;
-  padding: 0;
+  background: var(--surface);
+  padding: 0 var(--space-1);
   margin: 0;
   line-height: inherit;
   font: inherit;
-  outline: 2px solid var(--control-border, var(--border));
-  outline-offset: var(--outline-offset);
+  border-radius: var(--radius-xs);
+  outline: none;
+  box-shadow: 0 0 0 1px var(--border);
 }
 input.inline-edit:focus {
-  outline: 2px solid color-mix(in srgb, var(--link) 50%, transparent);
-  outline-offset: var(--outline-offset-l);
-  box-shadow: none;
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0 0 3px var(--accent-ring);
 }
 
 #list-panel .panel__header input[type='search'] {
   flex: 1;
+}
+
+/* Search input: comfortable, crisp accent focus */
+#list-panel .panel__header input[type='search']:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
 }
 
 /* Issues list polish */
@@ -25,88 +33,90 @@ input.inline-edit:focus {
   padding: 0;
   margin: 0;
 }
-#list-panel .panel__body li {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 8px 10px;
-  padding: 10px 18px;
-  margin: 0;
-  border-radius: 8px;
+
+/* Table list rows: dense, scannable, hairline separators */
+#list-panel tr.issue-row {
+  cursor: pointer;
   transition:
-    background 140ms ease,
-    transform 80ms ease,
-    box-shadow 140ms ease;
+    background var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out);
 }
-#list-panel .panel__body li:hover {
-  background: color-mix(in srgb, var(--control-bg) 60%, transparent);
+#list-panel tr.issue-row:hover {
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
 }
-#list-panel .panel__body li.selected {
-  background: color-mix(in srgb, var(--link) 10%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--link) 35%, var(--border)) inset;
+#list-panel tr.issue-row.selected {
+  background: var(--accent-subtle);
 }
-#list-panel .panel__body li .muted {
-  font-size: 12px;
+/* Crisp left accent indicator on the selected row */
+#list-panel tr.issue-row.selected td:first-child {
+  box-shadow: inset 2px 0 0 0 var(--accent);
 }
-
-/* Details typography */
-#detail-panel .panel__body {
-  line-height: 1.5;
+/* Strong, readable title; muted id/meta */
+#list-panel tr.issue-row td:nth-child(3) .editable {
+  font-weight: var(--weight-medium);
+  color: var(--fg);
 }
-#detail-panel .panel__body h1,
-#detail-panel .panel__body h2,
-#detail-panel .panel__body h3 {
-  letter-spacing: 0.01em;
+#list-panel tr.issue-row td.mono {
+  color: var(--muted);
 }
 
-/* Keyboard focus ring helper */
-:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--link) 60%, transparent);
-  outline-offset: var(--outline-offset-m);
-}
-
-/* List row layout closer to mock */
+/* Legacy card-row hooks (kept for compatibility) */
 #list-panel .panel__body li.issue-item {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 6px 12px;
-  padding: 12px 18px;
+  gap: var(--space-3) var(--space-6);
+  padding: var(--space-6) var(--space-9);
   border-bottom: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
   border-radius: 0;
   cursor: pointer;
   transition:
-    background 140ms ease,
-    box-shadow 140ms ease;
+    background var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out);
 }
 #list-panel .panel__body li.issue-item:hover {
-  background: color-mix(in srgb, var(--control-bg) 55%, transparent);
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
 }
 #list-panel .panel__body li.issue-item.selected {
-  background: color-mix(in srgb, var(--link) 10%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--link) 35%, var(--border)) inset;
+  background: var(--accent-subtle);
+  box-shadow: inset 2px 0 0 0 var(--accent);
 }
 #list-panel .issue-title {
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
+  color: var(--fg);
 }
 #list-panel .issue-meta {
   color: var(--muted);
-  font-size: 12px;
-  margin-top: 2px;
+  font-size: var(--text-sm);
+  margin-top: var(--space-1);
 }
 #list-panel .issue-right {
   display: grid;
   grid-template-rows: auto auto;
   justify-items: end;
-  gap: 4px;
+  gap: var(--space-2);
 }
 #list-panel .issue-id {
   color: var(--muted);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 .mono {
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-    'Courier New', monospace;
+  font-family: var(--font-mono);
   font-variant-ligatures: none;
+}
+
+/* Details typography */
+#detail-panel .panel__body {
+  line-height: var(--leading-normal);
+}
+#detail-panel .panel__body h1,
+#detail-panel .panel__body h2,
+#detail-panel .panel__body h3 {
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Keyboard focus ring helper */
+:focus-visible {
+  outline: 2px solid var(--accent-ring);
+  outline-offset: var(--outline-offset-m);
 }
