@@ -1,23 +1,28 @@
 /* --- Delete Issue Button --- */
 .delete-issue-btn {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 4px;
-  padding: 4px 6px;
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
   cursor: pointer;
-  color: #c62828;
+  color: var(--danger);
   transition:
-    background 0.15s,
-    border-color 0.15s;
+    background var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
+    color var(--dur-2) var(--ease-out);
 }
 .delete-issue-btn:hover {
-  background: rgba(198, 40, 40, 0.1);
-  border-color: rgba(198, 40, 40, 0.3);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 28%, transparent);
 }
 .delete-issue-btn:focus-visible {
-  outline: 2px solid #c62828;
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 35%, transparent);
 }
 .delete-issue-btn svg {
   width: 16px;
@@ -28,20 +33,22 @@
   position: absolute;
   top: 100%;
   left: 50%;
-  transform: translateX(-50%);
-  margin-top: 6px;
-  padding: 4px 8px;
-  font-size: 12px;
-  font-weight: 500;
+  transform: translateX(-50%) translateY(2px);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
   white-space: nowrap;
   background: var(--fg);
   color: var(--bg);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity 0.1s,
-    visibility 0.1s;
+    opacity var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out),
+    visibility var(--dur-2) var(--ease-out);
   pointer-events: none;
   z-index: 100;
 }
@@ -54,51 +61,72 @@
   border: 5px solid transparent;
   border-bottom-color: var(--fg);
 }
-.delete-issue-btn:hover .tooltip {
+.delete-issue-btn:hover .tooltip,
+.delete-issue-btn:focus-visible .tooltip {
   opacity: 1;
   visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
 
 /* --- Delete Confirmation Dialog --- */
 #delete-confirm-dialog {
   padding: 0;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--bg);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
   color: var(--fg);
   width: min(400px, 90vw);
   margin: auto;
+  overflow: hidden;
+  box-shadow: var(--shadow-overlay);
+}
+#delete-confirm-dialog[open] {
+  animation: dialog-pop var(--dur-3) var(--ease-out);
 }
 #delete-confirm-dialog::backdrop {
-  background: color-mix(in srgb, #000 45%, transparent);
-  backdrop-filter: blur(1px);
+  background: color-mix(in srgb, #0b0e16 50%, transparent);
+  backdrop-filter: blur(4px);
+  animation: backdrop-fade var(--dur-3) var(--ease-out);
 }
 .delete-confirm {
-  padding: 20px;
+  padding: var(--space-10);
 }
 .delete-confirm__title {
-  margin: 0 0 12px;
-  font-size: 18px;
-  font-weight: 600;
+  margin: 0 0 var(--space-6);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 .delete-confirm__message {
-  margin: 0 0 20px;
-  line-height: 1.5;
-  color: var(--fg);
+  margin: 0 0 var(--space-10);
+  line-height: var(--leading-normal);
+  font-size: var(--text-base);
+  color: var(--muted);
 }
 .delete-confirm__message strong {
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
+  color: var(--fg);
 }
 .delete-confirm__actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: var(--space-4);
 }
 .btn.danger {
-  background: var(--danger, #b00020);
+  background: var(--danger);
   color: #fff;
-  border-color: var(--danger, #b00020);
+  border-color: var(--danger);
+  font-weight: var(--weight-semibold);
 }
 .btn.danger:hover {
-  background: color-mix(in srgb, var(--danger, #b00020) 85%, #000);
+  background: color-mix(in srgb, var(--danger) 86%, #000);
+  border-color: color-mix(in srgb, var(--danger) 86%, #000);
+}
+.btn.danger:active {
+  background: color-mix(in srgb, var(--danger) 78%, #000);
+  border-color: color-mix(in srgb, var(--danger) 78%, #000);
+}
+.btn.danger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 35%, transparent);
 }
