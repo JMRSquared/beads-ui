@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
   height: 100%;
@@ -12,23 +18,38 @@ body {
 body {
   color: var(--fg);
   background: var(--bg);
-  font-family:
-    -apple-system,
-    system-ui,
-    Segoe UI,
-    Roboto,
-    Ubuntu,
-    Cantarell,
-    Noto Sans,
-    sans-serif;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  letter-spacing: 0.01em;
+  font-feature-settings: 'cv05', 'ss01';
+  letter-spacing: var(--tracking-normal);
+}
+
+/* Smooth color transitions when toggling theme */
+body,
+.app-header,
+.panel,
+.board-column,
+.board-card,
+.epic-group,
+.issues-block {
+  transition:
+    background-color var(--dur-3) var(--ease-out),
+    border-color var(--dur-3) var(--ease-out);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
 }
 
 a {
   color: var(--link);
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 2px;
+  transition: color var(--dur-2) var(--ease-out);
 
   &:visited {
     color: var(--link-visited);
@@ -36,5 +57,17 @@ a {
   &:hover,
   &:focus {
     color: var(--link-hover);
+  }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
