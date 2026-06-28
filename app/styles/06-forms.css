@@ -7,13 +7,15 @@ textarea {
   background: var(--control-bg, #fff);
   color: var(--control-fg, var(--fg));
   border: 1px solid var(--control-border, var(--border));
-  border-radius: 4px;
-  padding: var(--space-2) var(--space-3);
-  line-height: 2;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  font-family: inherit;
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
   transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease,
-    background 160ms ease;
+    border-color var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out),
+    background var(--dur-2) var(--ease-out);
 }
 input::placeholder,
 textarea::placeholder {
@@ -23,30 +25,73 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: color-mix(in srgb, var(--link) 60%, var(--control-border));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--link) 24%, transparent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
 }
 select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7l5 5 5-5H5z' fill='%23666'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 4px center;
+  background-position: right var(--space-4) center;
   background-size: 12px 12px;
-  padding-right: 24px;
+  padding-right: var(--space-9);
 }
 button {
   background: var(--button-bg, #f3f4f6);
   color: var(--button-fg, var(--fg));
   border: 1px solid var(--button-border, var(--border));
-  padding: var(--space-2) var(--space-4);
-  border-radius: 4px;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
   cursor: pointer;
   transition:
-    background 140ms ease,
-    color 140ms ease,
-    border-color 140ms ease,
-    transform 60ms ease;
+    background var(--dur-2) var(--ease-out),
+    color var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out),
+    transform var(--dur-1) var(--ease-out);
 }
+button:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+button:hover {
+  background: color-mix(in srgb, var(--button-bg) 92%, var(--fg));
+  border-color: color-mix(in srgb, var(--button-border) 70%, var(--fg));
+}
+button:active {
+  background: color-mix(in srgb, var(--button-bg) 86%, var(--fg));
+  transform: translateY(1px);
+}
+button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+button:disabled:hover {
+  background: var(--button-bg);
+  border-color: var(--button-border);
+}
+
+/* Primary action button */
+button#new-issue-btn {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+  font-weight: var(--weight-semibold);
+  box-shadow: var(--shadow-xs);
+}
+button#new-issue-btn:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+button#new-issue-btn:active {
+  background: var(--accent-active);
+  border-color: var(--accent-active);
+}
+
 /* Inline issue ID renderer: looks like plain text */
 button.id-copy {
   background: transparent;
@@ -59,15 +104,17 @@ button.id-copy {
   white-space: nowrap;
 }
 button.id-copy:hover {
+  background: transparent;
+  border: none;
   text-decoration: underline;
 }
-button:hover {
-  filter: brightness(1.02);
+button.id-copy:active {
+  background: transparent;
+  transform: none;
 }
-button:active {
-  transform: translateY(1px);
-}
-button:disabled {
-  opacity: 0.6;
-  cursor: default;
+button.id-copy:focus-visible {
+  border: none;
+  box-shadow: none;
+  text-decoration: underline;
+  border-radius: var(--radius-xs);
 }
