@@ -2,11 +2,11 @@ import { html, render } from 'lit-html';
 import { debug } from '../utils/logging.js';
 
 /**
- * Render the top navigation with three tabs and handle route changes.
+ * Render the top navigation with four tabs and handle route changes.
  *
  * @param {HTMLElement} mount_element
  * @param {{ getState: () => any, subscribe: (fn: (s: any) => void) => () => void }} store
- * @param {{ gotoView: (v: 'issues'|'epics'|'board') => void }} router
+ * @param {{ gotoView: (v: 'issues'|'epics'|'board'|'timeline') => void }} router
  */
 export function createTopNav(mount_element, store, router) {
   const log = debug('views:nav');
@@ -14,7 +14,7 @@ export function createTopNav(mount_element, store, router) {
   let unsubscribe = null;
 
   /**
-   * @param {'issues'|'epics'|'board'} view
+   * @param {'issues'|'epics'|'board'|'timeline'} view
    * @returns {(ev: MouseEvent) => void}
    */
   function onClick(view) {
@@ -47,6 +47,12 @@ export function createTopNav(mount_element, store, router) {
           class="tab ${active === 'board' ? 'active' : ''}"
           @click=${onClick('board')}
           >Board</a
+        >
+        <a
+          href="#/timeline"
+          class="tab ${active === 'timeline' ? 'active' : ''}"
+          @click=${onClick('timeline')}
+          >Timeline</a
         >
       </nav>
     `;

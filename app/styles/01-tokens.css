@@ -20,6 +20,9 @@
   --accent-contrast: #ffffff;
   --accent-subtle: color-mix(in srgb, var(--accent) 12%, transparent);
   --accent-ring: color-mix(in srgb, var(--accent) 40%, transparent);
+  /* Soft Linear-style colored elevation for primary/focus states */
+  --accent-glow: 0 2px 14px -2px
+    color-mix(in srgb, var(--accent) 45%, transparent);
 
   /* Semantic */
   --danger: #d92d20;
@@ -37,7 +40,7 @@
   --text-xs: 11px;
   --text-sm: 12px;
   --text-13: 13px;
-  --text-base: 14px;
+  --text-base: 13px;
   --text-md: 15px;
   --text-lg: 16px;
   --text-xl: 18px;

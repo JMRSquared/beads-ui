@@ -12,7 +12,7 @@ import { debug } from './utils/logging.js';
  */
 
 /**
- * @typedef {'issues'|'epics'|'board'} ViewName
+ * @typedef {'issues'|'epics'|'board'|'timeline'} ViewName
  */
 
 /**
@@ -21,6 +21,14 @@ import { debug } from './utils/logging.js';
 
 /**
  * @typedef {{ closed_filter: ClosedFilter }} BoardState
+ */
+
+/**
+ * @typedef {'day'|'week'|'month'} TimelineZoom
+ */
+
+/**
+ * @typedef {{ zoom: TimelineZoom }} TimelineState
  */
 
 /**
@@ -38,14 +46,14 @@ import { debug } from './utils/logging.js';
  */
 
 /**
- * @typedef {{ selected_id: string | null, view: ViewName, filters: Filters, board: BoardState, workspace: WorkspaceState }} AppState
+ * @typedef {{ selected_id: string | null, view: ViewName, filters: Filters, board: BoardState, timeline: TimelineState, workspace: WorkspaceState }} AppState
  */
 
 /**
  * Create a simple store for application state.
  *
  * @param {Partial<AppState>} [initial]
- * @returns {{ getState: () => AppState, setState: (patch: { selected_id?: string | null, filters?: Partial<Filters>, workspace?: Partial<WorkspaceState> }) => void, subscribe: (fn: (s: AppState) => void) => () => void }}
+ * @returns {{ getState: () => AppState, setState: (patch: { selected_id?: string | null, view?: ViewName, filters?: Partial<Filters>, board?: Partial<BoardState>, timeline?: Partial<TimelineState>, workspace?: Partial<WorkspaceState> }) => void, subscribe: (fn: (s: AppState) => void) => () => void }}
  */
 export function createStore(initial = {}) {
   const log = debug('state');
@@ -66,6 +74,14 @@ export function createStore(initial = {}) {
         initial.board?.closed_filter === 'today'
           ? initial.board?.closed_filter
           : 'today'
+    },
+    timeline: {
+      zoom:
+        initial.timeline?.zoom === 'day' ||
+        initial.timeline?.zoom === 'week' ||
+        initial.timeline?.zoom === 'month'
+          ? initial.timeline?.zoom
+          : 'week'
     },
     workspace: {
       current: initial.workspace?.current ?? null,
@@ -93,7 +109,7 @@ export function createStore(initial = {}) {
     /**
      * Update state. Nested filters can be partial.
      *
-     * @param {{ selected_id?: string | null, filters?: Partial<Filters>, board?: Partial<BoardState>, workspace?: Partial<WorkspaceState> }} patch
+     * @param {{ selected_id?: string | null, view?: ViewName, filters?: Partial<Filters>, board?: Partial<BoardState>, timeline?: Partial<TimelineState>, workspace?: Partial<WorkspaceState> }} patch
      */
     setState(patch) {
       /** @type {AppState} */
@@ -102,6 +118,7 @@ export function createStore(initial = {}) {
         ...patch,
         filters: { ...state.filters, ...(patch.filters || {}) },
         board: { ...state.board, ...(patch.board || {}) },
+        timeline: { ...state.timeline, ...(patch.timeline || {}) },
         workspace: {
           current:
             patch.workspace?.current !== undefined
@@ -124,6 +141,7 @@ export function createStore(initial = {}) {
         next.filters.search === state.filters.search &&
         next.filters.type === state.filters.type &&
         next.board.closed_filter === state.board.closed_filter &&
+        next.timeline.zoom === state.timeline.zoom &&
         !workspace_changed
       ) {
         return;

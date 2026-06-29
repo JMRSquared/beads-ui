@@ -42,6 +42,11 @@
 .board-column__title-text {
   font-weight: var(--weight-semibold);
 }
+.board-column__icon {
+  font-size: var(--text-13);
+  line-height: 1;
+  opacity: 0.75;
+}
 .board-column__count {
   background: var(--surface-raised);
   color: var(--muted);

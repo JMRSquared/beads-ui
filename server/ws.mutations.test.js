@@ -46,12 +46,64 @@ describe('ws mutation handlers', () => {
     expect(obj.payload.status).toBe('in_progress');
   });
 
+  test('update-status accepts a custom (non-built-in) status', async () => {
+    const mRun = /** @type {import('vitest').Mock} */ (runBd);
+    const mJson = /** @type {import('vitest').Mock} */ (runBdJson);
+    mRun.mockResolvedValueOnce({ code: 0, stdout: '', stderr: '' });
+    mJson.mockResolvedValueOnce({
+      code: 0,
+      stdoutJson: { id: 'UI-9', status: 'in_review' }
+    });
+    const ws = makeStubSocket();
+    const req = {
+      id: 'rc',
+      type: 'update-status',
+      payload: { id: 'UI-9', status: 'in_review' }
+    };
+    await handleMessage(
+      /** @type {any} */ (ws),
+      Buffer.from(JSON.stringify(req))
+    );
+    expect(mRun).toHaveBeenCalledWith([
+      'update',
+      'UI-9',
+      '--status',
+      'in_review'
+    ]);
+    const obj = JSON.parse(ws.sent[ws.sent.length - 1]);
+    expect(obj.ok).toBe(true);
+    expect(obj.payload.status).toBe('in_review');
+  });
+
+  test('get-statuses returns bd statuses json', async () => {
+    const mJson = /** @type {import('vitest').Mock} */ (runBdJson);
+    const statuses = {
+      built_in_statuses: [{ name: 'open', category: 'active', icon: '○' }],
+      custom_statuses: [{ name: 'in_review', category: 'active' }],
+      schema_version: 1
+    };
+    mJson.mockResolvedValueOnce({ code: 0, stdoutJson: statuses });
+    const ws = makeStubSocket();
+    const req = { id: 'gs', type: 'get-statuses' };
+    await handleMessage(
+      /** @type {any} */ (ws),
+      Buffer.from(JSON.stringify(req))
+    );
+    expect(mJson).toHaveBeenCalledWith(
+      ['statuses', '--json'],
+      expect.any(Object)
+    );
+    const obj = JSON.parse(ws.sent[ws.sent.length - 1]);
+    expect(obj.ok).toBe(true);
+    expect(obj.payload).toEqual(statuses);
+  });
+
   test('update-status invalid payload yields bad_request', async () => {
     const ws = makeStubSocket();
     const req = {
       id: 'r2',
       type: 'update-status',
-      payload: { id: 'UI-7', status: 'bogus' }
+      payload: { id: 'UI-7', status: '' }
     };
     await handleMessage(
       /** @type {any} */ (ws),

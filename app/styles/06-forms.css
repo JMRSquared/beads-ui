@@ -86,6 +86,12 @@ button#new-issue-btn {
 button#new-issue-btn:hover {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
+  box-shadow: var(--accent-glow);
+}
+button#new-issue-btn:focus-visible {
+  box-shadow:
+    0 0 0 3px var(--accent-ring),
+    var(--accent-glow);
 }
 button#new-issue-btn:active {
   background: var(--accent-active);

@@ -65,6 +65,17 @@ vi.mock('./ws.js', () => {
   return { createWsClient: () => singleton };
 });
 
+/**
+ * Flush pending microtasks. The board resolves its dynamic swimlanes via an
+ * async `get-statuses` request before registering per-status stores, so tests
+ * must let several promise ticks settle before pushing snapshots.
+ */
+async function flush() {
+  for (let i = 0; i < 8; i++) {
+    await Promise.resolve();
+  }
+}
+
 describe('push stores integration (board view)', () => {
   test('updates only the matching column on push events (multi-sub isolation)', async () => {
     const client = /** @type {any} */ (createWsClient());
@@ -74,18 +85,20 @@ describe('push stores integration (board view)', () => {
 
     bootstrap(root);
     // Allow router + subscriptions to wire
-    await Promise.resolve();
+    await flush();
 
     // Initial board: no cards
-    expect(document.querySelectorAll('#ready-col .board-card').length).toBe(0);
     expect(
-      document.querySelectorAll('#in-progress-col .board-card').length
+      document.querySelectorAll('#status-col-open .board-card').length
+    ).toBe(0);
+    expect(
+      document.querySelectorAll('#status-col-in_progress .board-card').length
     ).toBe(0);
 
     // Send per-subscription snapshots
     client._trigger('snapshot', {
       type: 'snapshot',
-      id: 'tab:board:ready',
+      id: 'tab:board:status:open',
       revision: 1,
       issues: [
         { id: 'R-1', title: 'ready 1', priority: 1, updated_at: 10_000 },
@@ -94,47 +107,53 @@ describe('push stores integration (board view)', () => {
     });
     client._trigger('snapshot', {
       type: 'snapshot',
-      id: 'tab:board:in-progress',
+      id: 'tab:board:status:in_progress',
       revision: 1,
       issues: [{ id: 'P-1', title: 'prog 1', updated_at: 20_000 }]
     });
-    await Promise.resolve();
+    await flush();
 
     // Verify columns reflect only their subscription data
-    expect(document.querySelectorAll('#ready-col .board-card').length).toBe(2);
     expect(
-      document.querySelectorAll('#in-progress-col .board-card').length
+      document.querySelectorAll('#status-col-open .board-card').length
+    ).toBe(2);
+    expect(
+      document.querySelectorAll('#status-col-in_progress .board-card').length
     ).toBe(1);
 
     // Upsert into Ready only
     client._trigger('upsert', {
       type: 'upsert',
-      id: 'tab:board:ready',
+      id: 'tab:board:status:open',
       revision: 2,
       issue: { id: 'R-3', title: 'ready 3', priority: 1, updated_at: 12_000 }
     });
-    await Promise.resolve();
+    await flush();
 
-    expect(document.querySelectorAll('#ready-col .board-card').length).toBe(3);
+    expect(
+      document.querySelectorAll('#status-col-open .board-card').length
+    ).toBe(3);
     // In-progress unaffected
     expect(
-      document.querySelectorAll('#in-progress-col .board-card').length
+      document.querySelectorAll('#status-col-in_progress .board-card').length
     ).toBe(1);
 
     // Delete from In-progress only
     client._trigger('delete', {
       type: 'delete',
-      id: 'tab:board:in-progress',
+      id: 'tab:board:status:in_progress',
       revision: 2,
       issue_id: 'P-1'
     });
-    await Promise.resolve();
+    await flush();
 
     expect(
-      document.querySelectorAll('#in-progress-col .board-card').length
+      document.querySelectorAll('#status-col-in_progress .board-card').length
     ).toBe(0);
     // Ready unaffected
-    expect(document.querySelectorAll('#ready-col .board-card').length).toBe(3);
+    expect(
+      document.querySelectorAll('#status-col-open .board-card').length
+    ).toBe(3);
   });
 
   test('reconnect replay does not duplicate entries', async () => {
@@ -144,45 +163,51 @@ describe('push stores integration (board view)', () => {
     const root = /** @type {HTMLElement} */ (document.getElementById('app'));
 
     bootstrap(root);
-    await Promise.resolve();
+    await flush();
 
     // Initial snapshot
     client._trigger('snapshot', {
       type: 'snapshot',
-      id: 'tab:board:ready',
+      id: 'tab:board:status:open',
       revision: 1,
       issues: [
         { id: 'R-1', title: 'r1', priority: 1, updated_at: 10_000 },
         { id: 'R-2', title: 'r2', priority: 2, updated_at: 10_100 }
       ]
     });
-    await Promise.resolve();
-    expect(document.querySelectorAll('#ready-col .board-card').length).toBe(2);
+    await flush();
+    expect(
+      document.querySelectorAll('#status-col-open .board-card').length
+    ).toBe(2);
 
     // Simulate reconnect cycle and server replaying the same snapshot
     client._emitConn('reconnecting');
     client._emitConn('open');
     client._trigger('snapshot', {
       type: 'snapshot',
-      id: 'tab:board:ready',
+      id: 'tab:board:status:open',
       revision: 1,
       issues: [
         { id: 'R-1', title: 'r1', priority: 1, updated_at: 10_000 },
         { id: 'R-2', title: 'r2', priority: 2, updated_at: 10_100 }
       ]
     });
-    await Promise.resolve();
+    await flush();
     // Still exactly two cards; no duplicates
-    expect(document.querySelectorAll('#ready-col .board-card').length).toBe(2);
+    expect(
+      document.querySelectorAll('#status-col-open .board-card').length
+    ).toBe(2);
 
     // Newer upsert after replay updates item without duplication
     client._trigger('upsert', {
       type: 'upsert',
-      id: 'tab:board:ready',
+      id: 'tab:board:status:open',
       revision: 2,
       issue: { id: 'R-2', title: 'r2!', priority: 2, updated_at: 10_200 }
     });
-    await Promise.resolve();
-    expect(document.querySelectorAll('#ready-col .board-card').length).toBe(2);
+    await flush();
+    expect(
+      document.querySelectorAll('#status-col-open .board-card').length
+    ).toBe(2);
   });
 });
