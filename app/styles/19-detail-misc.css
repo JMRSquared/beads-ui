@@ -1,0 +1,48 @@
+/* Sidebar control aesthetics */
+#detail-root .props-card input[type='text'] {
+  border: 1px solid var(--border);
+  outline: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-raised);
+  color: var(--fg);
+  font-size: var(--text-sm);
+  transition:
+    border-color var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out);
+}
+#detail-root .props-card input[type='text']:hover {
+  border-color: color-mix(in srgb, var(--border) 50%, var(--fg));
+}
+#detail-root .props-card input[type='text']:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+/* Compact icon button (used in label chips) */
+#detail-root .props-card .icon-button {
+  text-align: center;
+  border-radius: var(--badge-radius);
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  padding: 0 var(--space-3);
+  height: 18px;
+  margin-right: -8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color var(--dur-2) var(--ease-out);
+}
+#detail-root .props-card .icon-button:hover {
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.props-card__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding-top: var(--space-5);
+}
+.props-card__footer input {
+  flex: 1;
+  min-width: 0;
+}

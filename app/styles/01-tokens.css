@@ -1,0 +1,167 @@
+:root {
+  color-scheme: light dark;
+
+  /* ── Core neutral palette (light defaults) ───────────────────── */
+  --fg: #1b1c1f;
+  --bg: #ffffff;
+  --muted: #6a6f7a;
+  --border: #e6e8ec;
+  --panel-bg: #f7f8fa;
+
+  /* Layered surfaces */
+  --surface: var(--bg);
+  --surface-raised: #ffffff;
+  --surface-sunken: var(--panel-bg);
+
+  /* ── Accent (Linear-style indigo) ────────────────────────────── */
+  --accent: #5e6ad2;
+  --accent-hover: #4f5bc7;
+  --accent-active: #444fb0;
+  --accent-contrast: #ffffff;
+  --accent-subtle: color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-ring: color-mix(in srgb, var(--accent) 40%, transparent);
+  /* Soft Linear-style colored elevation for primary/focus states */
+  --accent-glow: 0 2px 14px -2px
+    color-mix(in srgb, var(--accent) 45%, transparent);
+
+  /* Semantic */
+  --danger: #d92d20;
+  --success: #2e9e44;
+  --warning: #d9920c;
+
+  /* ── Typography ──────────────────────────────────────────────── */
+  --font-sans:
+    'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, Ubuntu, Cantarell,
+    'Noto Sans', sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-13: 13px;
+  --text-base: 13px;
+  --text-md: 15px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 22px;
+  --text-3xl: 28px;
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.5;
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --tracking-tight: -0.012em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+
+  /* ── Radii ───────────────────────────────────────────────────── */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+
+  /* Badges: base + derived via color-mix */
+  --badge-radius: var(--radius-full);
+
+  /* ── Elevation (light) ───────────────────────────────────────── */
+  --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-sm:
+    0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
+  --shadow-md:
+    0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
+  --shadow-lg:
+    0 12px 24px -6px rgba(16, 24, 40, 0.12),
+    0 4px 8px -4px rgba(16, 24, 40, 0.08);
+  --shadow-overlay: 0 24px 48px -12px rgba(16, 24, 40, 0.25);
+
+  /* ── Motion ──────────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-1: 90ms;
+  --dur-2: 140ms;
+  --dur-3: 200ms;
+  --dur-4: 320ms;
+
+  /* ── Status base colors ──────────────────────────────────────── */
+  --status-open-base: #51cb4e; /* open */
+  --status-in-progress-base: #666666; /* in_progress */
+  --status-closed-base: #5f26c9; /* closed */
+
+  /* Type base colors */
+  --type-bug-base: #9f2011;
+  --type-task-base: #cd9e33;
+  --type-epic-base: #f69842;
+  --type-feature-base: #51cb43;
+  --type-chore-base: #666666;
+
+  /* Neutral badge */
+  --badge-bg-neutral: color-mix(in srgb, var(--panel-bg) 85%, #6b7280);
+  --badge-fg-neutral: color-mix(in srgb, #6b7280 85%, #000);
+
+  /* Derived Type badge colors (light) */
+  --badge-bg-bug: color-mix(in srgb, var(--panel-bg) 85%, var(--type-bug-base));
+  --badge-fg-bug: color-mix(in srgb, var(--type-bug-base) 90%, #000);
+  --badge-bg-feature: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-feature-base)
+  );
+  --badge-fg-feature: color-mix(in srgb, var(--type-feature-base) 90%, #000);
+  --badge-bg-task: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-task-base)
+  );
+  --badge-fg-task: color-mix(in srgb, var(--type-task-base) 90%, #000);
+  --badge-bg-epic: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-epic-base)
+  );
+  --badge-fg-epic: color-mix(in srgb, var(--type-epic-base) 90%, #000);
+  --badge-bg-chore: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-chore-base)
+  );
+  --badge-fg-chore: color-mix(in srgb, var(--type-chore-base) 90%, #000);
+
+  /* Links (mapped to accent for a unified identity) */
+  --link: var(--accent);
+  --link-hover: var(--accent-hover);
+  --link-visited: #6d28d9;
+
+  /* Markdown code/pre */
+  --code-bg: #f1f2f6;
+  --code-fg: #111827;
+  --pre-bg: #0b1021;
+  --pre-fg: #e5e7eb;
+
+  /* focus ring */
+  --outline-offset-l: 6px;
+  --outline-offset-m: 2px;
+  --outline-offset-s: 0px;
+
+  /* Spacing scale (2px baseline) */
+  --space-0: 0;
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 6px;
+  --space-4: 8px;
+  --space-5: 10px;
+  --space-6: 12px;
+  --space-7: 14px;
+  --space-8: 16px;
+  --space-9: 18px;
+  --space-10: 20px;
+  --space-12: 24px;
+  --space-16: 32px;
+}

@@ -1,0 +1,239 @@
+/* ─────────────────────────────────────────────────────────────
+ * Theme overrides. Dark neutrals are kept cool but near-neutral
+ * (not navy) for a calmer, more modern pro-tool feel.
+ * ───────────────────────────────────────────────────────────── */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #e9e8ee;
+    --bg: #0e0d13;
+    --muted: #9a96a6;
+    --panel-bg: #17161e;
+    --border: #2a2832;
+
+    --surface-raised: #1c1a24;
+    --surface-sunken: #100f16;
+
+    --accent: #6e79d6;
+    --accent-hover: #818bdf;
+    --accent-active: #5d68c9;
+
+    /* Dark variants derived via color-mix for contrast */
+    --badge-bg-neutral: color-mix(in srgb, var(--panel-bg) 80%, #9ca3af);
+    --badge-fg-neutral: color-mix(in srgb, #9ca3af 75%, #fff);
+    --badge-bg-bug: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-bug-base)
+    );
+    --badge-fg-bug: color-mix(in srgb, var(--type-bug-base) 75%, #fff);
+    --badge-bg-feature: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-feature-base)
+    );
+    --badge-fg-feature: color-mix(in srgb, var(--type-feature-base) 75%, #fff);
+    --badge-bg-task: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-task-base)
+    );
+    --badge-fg-task: color-mix(in srgb, var(--type-task-base) 75%, #fff);
+    --badge-bg-epic: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-epic-base)
+    );
+    --badge-fg-epic: color-mix(in srgb, var(--type-epic-base) 75%, #fff);
+    --badge-bg-chore: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-chore-base)
+    );
+    --badge-fg-chore: color-mix(in srgb, var(--type-chore-base) 75%, #fff);
+
+    --link: var(--accent);
+    --link-hover: var(--accent-hover);
+    --link-visited: #c4b5fd;
+
+    --code-bg: #1b1d24;
+    --code-fg: #e7e8ec;
+    --pre-bg: #08090d;
+    --pre-fg: #e5e7eb;
+
+    /* Dark elevation: deeper, blacker shadows */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.35);
+    --shadow-md:
+      0 4px 12px -2px rgba(0, 0, 0, 0.4), 0 2px 6px -2px rgba(0, 0, 0, 0.3);
+    --shadow-lg:
+      0 16px 40px -8px rgba(0, 0, 0, 0.45), 0 6px 12px -6px rgba(0, 0, 0, 0.35);
+    --shadow-overlay: 0 32px 64px -16px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Manual theme override */
+html[data-theme='dark'] {
+  --fg: #e9e8ee;
+  --bg: #0e0d13;
+  --muted: #9a96a6;
+  --panel-bg: #17161e;
+  --border: #2a2832;
+
+  --surface-raised: #1c1a24;
+  --surface-sunken: #100f16;
+
+  --accent: #6e79d6;
+  --accent-hover: #818bdf;
+  --accent-active: #5d68c9;
+
+  --badge-bg-neutral: #2a2d37;
+  --badge-fg-neutral: #f3f4f6;
+  --badge-bg-bug: color-mix(in srgb, var(--panel-bg) 80%, var(--type-bug-base));
+  --badge-fg-bug: color-mix(in srgb, var(--type-bug-base) 75%, #fff);
+  --badge-bg-feature: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--type-feature-base)
+  );
+  --badge-fg-feature: color-mix(in srgb, var(--type-feature-base) 75%, #fff);
+  --badge-bg-task: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--type-task-base)
+  );
+  --badge-fg-task: color-mix(in srgb, var(--type-task-base) 75%, #fff);
+  --badge-bg-epic: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--type-epic-base)
+  );
+  --badge-fg-epic: color-mix(in srgb, var(--type-epic-base) 75%, #fff);
+  --badge-bg-chore: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--type-chore-base)
+  );
+  --badge-fg-chore: color-mix(in srgb, var(--type-chore-base) 75%, #fff);
+
+  --link: var(--accent);
+  --link-hover: var(--accent-hover);
+  --link-visited: #c4b5fd;
+
+  --code-bg: #1b1d24;
+  --code-fg: #e7e8ec;
+  --pre-bg: #08090d;
+  --pre-fg: #e5e7eb;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.35);
+  --shadow-md:
+    0 4px 12px -2px rgba(0, 0, 0, 0.4), 0 2px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg:
+    0 16px 40px -8px rgba(0, 0, 0, 0.45), 0 6px 12px -6px rgba(0, 0, 0, 0.35);
+  --shadow-overlay: 0 32px 64px -16px rgba(0, 0, 0, 0.6);
+}
+
+/* Force light theme when OS prefers dark */
+html[data-theme='light'] {
+  --fg: #1b1c1f;
+  --bg: #ffffff;
+  --muted: #6a6f7a;
+  --panel-bg: #f7f8fa;
+  --border: #e6e8ec;
+
+  --surface-raised: #ffffff;
+  --surface-sunken: #f7f8fa;
+
+  --accent: #5e6ad2;
+  --accent-hover: #4f5bc7;
+  --accent-active: #444fb0;
+
+  --badge-bg-neutral: #e9ebef;
+  --badge-fg-neutral: #374151;
+  --badge-bg-bug: color-mix(in srgb, var(--panel-bg) 85%, var(--type-bug-base));
+  --badge-fg-bug: color-mix(in srgb, var(--type-bug-base) 90%, #000);
+  --badge-bg-feature: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-feature-base)
+  );
+  --badge-fg-feature: color-mix(in srgb, var(--type-feature-base) 90%, #000);
+  --badge-bg-task: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-task-base)
+  );
+  --badge-fg-task: color-mix(in srgb, var(--type-task-base) 90%, #000);
+  --badge-bg-epic: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-epic-base)
+  );
+  --badge-fg-epic: color-mix(in srgb, var(--type-epic-base) 90%, #000);
+  --badge-bg-chore: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-chore-base)
+  );
+  --badge-fg-chore: color-mix(in srgb, var(--type-chore-base) 90%, #000);
+
+  --link: var(--accent);
+  --link-hover: var(--accent-hover);
+  --link-visited: #6d28d9;
+
+  --code-bg: #f1f2f6;
+  --code-fg: #1f2937;
+  --pre-bg: #0b1021;
+  --pre-fg: #e5e7eb;
+
+  /* Light controls override to prevent dark OS bleed-through */
+  --control-bg: #ffffff;
+  --control-fg: #111827;
+  --control-border: #d8dbe1;
+  --control-placeholder: #9ca3af;
+  --button-bg: #f3f4f6;
+  --button-fg: #111827;
+  --button-border: #d8dbe1;
+
+  --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-sm:
+    0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
+  --shadow-md:
+    0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
+  --shadow-lg:
+    0 12px 24px -6px rgba(16, 24, 40, 0.12),
+    0 4px 8px -4px rgba(16, 24, 40, 0.08);
+  --shadow-overlay: 0 24px 48px -12px rgba(16, 24, 40, 0.25);
+}
+
+/* Controls palette (light defaults) */
+:root {
+  --control-bg: #ffffff;
+  --control-fg: #111827;
+  --control-border: #d8dbe1;
+  --control-placeholder: #9ca3af;
+  --button-bg: #f3f4f6;
+  --button-fg: #111827;
+  --button-border: #d8dbe1;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --control-bg: #18171f;
+    --control-fg: #e9e8ee;
+    --control-border: #2f2c39;
+    --control-placeholder: #8d8a98;
+    --button-bg: #1d1b25;
+    --button-fg: #e9e8ee;
+    --button-border: #2f2c39;
+  }
+}
+html[data-theme='dark'] {
+  --control-bg: #18171f;
+  --control-fg: #e9e8ee;
+  --control-border: #2f2c39;
+  --control-placeholder: #8d8a98;
+  --button-bg: #1d1b25;
+  --button-fg: #e9e8ee;
+  --button-border: #2f2c39;
+}

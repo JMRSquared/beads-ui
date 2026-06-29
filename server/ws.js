@@ -776,19 +776,22 @@ export async function handleMessage(ws, data) {
   if (req.type === 'update-status') {
     log('update-status');
     const { id, status } = /** @type {any} */ (req.payload);
-    const allowed = new Set(['open', 'in_progress', 'closed']);
+    // Any non-empty status is accepted; bd is the source of truth for the set
+    // of valid statuses (built-in + custom via `status.custom` config) and
+    // rejects unknown values. This lets the board's dynamic swimlanes target
+    // configured statuses without hardcoding them here.
     if (
       typeof id !== 'string' ||
       id.length === 0 ||
       typeof status !== 'string' ||
-      !allowed.has(status)
+      status.trim().length === 0
     ) {
       ws.send(
         JSON.stringify(
           makeError(
             req,
             'bad_request',
-            "payload requires { id: string, status: 'open'|'in_progress'|'closed' }"
+            'payload requires { id: string, status: non-empty string }'
           )
         )
       );
@@ -1267,6 +1270,23 @@ export async function handleMessage(ws, data) {
         })
       )
     );
+    return;
+  }
+
+  // get-statuses: returns bd's configured issue statuses (built-in + custom).
+  // Drives the board's dynamic swimlanes.
+  if (req.type === 'get-statuses') {
+    log('get-statuses');
+    const res = await runBdJson(['statuses', '--json'], {
+      cwd: CURRENT_WORKSPACE?.root_dir
+    });
+    if (res.code !== 0 || !('stdoutJson' in res)) {
+      ws.send(
+        JSON.stringify(makeError(req, 'bd_error', res.stderr || 'bd failed'))
+      );
+      return;
+    }
+    ws.send(JSON.stringify(makeOk(req, res.stdoutJson)));
     return;
   }
 

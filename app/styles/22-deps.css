@@ -1,0 +1,22 @@
+/* Dependency indicators column */
+.deps-col {
+  text-align: center;
+  font-size: var(--text-13);
+  white-space: nowrap;
+}
+.deps-indicator {
+  display: inline-flex;
+  gap: var(--space-3);
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+}
+.dep-count,
+.dependent-count {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  transition: color var(--dur-2) var(--ease-out);
+}
+.dep-count:hover,
+.dependent-count:hover {
+  color: var(--fg);
+}

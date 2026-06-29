@@ -29,6 +29,8 @@ describe('router', () => {
     expect(parseView('#/issues')).toBe('issues');
     expect(parseView('#/epics')).toBe('epics');
     expect(parseView('#/board')).toBe('board');
+    expect(parseView('#/timeline')).toBe('timeline');
+    expect(parseView('#/timeline?issue=AB-1')).toBe('timeline');
     expect(parseView('')).toBe('issues');
     expect(parseView('#/unknown')).toBe('issues');
   });

@@ -1,6 +1,21 @@
 import { describe, expect, test } from 'vitest';
 import { createSubscriptionIssueStore } from '../data/subscription-issue-store.js';
-import { createBoardView } from './board.js';
+import { boardStatusClientId, createBoardView } from './board.js';
+
+/**
+ * @param {Array<{ name: string, category?: string, label?: string }>} list
+ */
+function stubStatusesProvider(list) {
+  return {
+    getStatuses: async () =>
+      list.map((s) => ({
+        name: s.name,
+        category: s.category || '',
+        icon: '',
+        label: s.label || s.name
+      }))
+  };
+}
 
 function createTestIssueStores() {
   /** @type {Map<string, any>} */
@@ -52,9 +67,9 @@ describe('views/board keyboard navigation', () => {
       { id: 'P-2', title: 'p2', updated_at: '2025-10-23T09:00:00.000Z' }
     ];
     const issueStores = createTestIssueStores();
-    issueStores.getStore('tab:board:in-progress').applyPush({
+    issueStores.getStore(boardStatusClientId('in_progress')).applyPush({
       type: 'snapshot',
-      id: 'tab:board:in-progress',
+      id: boardStatusClientId('in_progress'),
       revision: 1,
       issues
     });
@@ -64,16 +79,17 @@ describe('views/board keyboard navigation', () => {
       null,
       () => {},
       undefined,
+      issueStores,
       undefined,
-      issueStores
+      stubStatusesProvider([{ name: 'in_progress', category: 'wip' }])
     );
     await view.load();
 
     const first = /** @type {HTMLElement} */ (
-      mount.querySelector('#in-progress-col .board-card')
+      mount.querySelector('#status-col-in_progress .board-card')
     );
     const second = /** @type {HTMLElement} */ (
-      mount.querySelectorAll('#in-progress-col .board-card')[1]
+      mount.querySelectorAll('#status-col-in_progress .board-card')[1]
     );
     first.focus();
     expect(document.activeElement).toBe(first);
@@ -99,15 +115,15 @@ describe('views/board keyboard navigation', () => {
       { id: 'P-2', title: 'p2', updated_at: '2025-10-23T09:00:00.000Z' }
     ];
     const issueStores = createTestIssueStores();
-    issueStores.getStore('tab:board:blocked').applyPush({
+    issueStores.getStore(boardStatusClientId('blocked')).applyPush({
       type: 'snapshot',
-      id: 'tab:board:blocked',
+      id: boardStatusClientId('blocked'),
       revision: 1,
       issues: issues.filter((i) => i.id.startsWith('B-'))
     });
-    issueStores.getStore('tab:board:in-progress').applyPush({
+    issueStores.getStore(boardStatusClientId('in_progress')).applyPush({
       type: 'snapshot',
-      id: 'tab:board:in-progress',
+      id: boardStatusClientId('in_progress'),
       revision: 1,
       issues: issues.filter((i) => i.id.startsWith('P-'))
     });
@@ -121,16 +137,21 @@ describe('views/board keyboard navigation', () => {
         opened.push(id);
       },
       undefined,
+      issueStores,
       undefined,
-      issueStores
+      stubStatusesProvider([
+        { name: 'blocked', category: 'wip' },
+        { name: 'deferred', category: 'frozen' },
+        { name: 'in_progress', category: 'wip' }
+      ])
     );
     await view.load();
 
     const open_first = /** @type {HTMLElement} */ (
-      mount.querySelector('#blocked-col .board-card')
+      mount.querySelector('#status-col-blocked .board-card')
     );
     const prog_first = /** @type {HTMLElement} */ (
-      mount.querySelector('#in-progress-col .board-card')
+      mount.querySelector('#status-col-in_progress .board-card')
     );
     open_first.focus();
     open_first.dispatchEvent(

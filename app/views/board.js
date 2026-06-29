@@ -1,6 +1,7 @@
 import { html, render } from 'lit-html';
 import { createListSelectors } from '../data/list-selectors.js';
 import { cmpClosedDesc, cmpPriorityThenCreated } from '../data/sort.js';
+import { DEFAULT_STATUSES } from '../data/statuses.js';
 import { createIssueIdRenderer } from '../utils/issue-id-renderer.js';
 import { debug } from '../utils/logging.js';
 import { createPriorityBadge } from '../utils/priority-badge.js';
@@ -8,10 +9,14 @@ import { showToast } from '../utils/toast.js';
 import { createTypeBadge } from '../utils/type-badge.js';
 
 /**
+ * @import { BoardStatus } from '../data/statuses.js'
+ */
+
+/**
  * @typedef {{
  *   id: string,
  *   title?: string,
- *   status?: 'open'|'in_progress'|'closed',
+ *   status?: string,
  *   priority?: number,
  *   issue_type?: string,
  *   created_at?: number,
@@ -21,32 +26,31 @@ import { createTypeBadge } from '../utils/type-badge.js';
  */
 
 /**
- * Map column IDs to their corresponding status values.
+ * Subscription client id used to back the swimlane for a given status.
  *
- * @type {Record<string, 'open'|'in_progress'|'closed'>}
+ * @param {string} status
+ * @returns {string}
  */
-const COLUMN_STATUS_MAP = {
-  'blocked-col': 'open',
-  'ready-col': 'open',
-  'in-progress-col': 'in_progress',
-  'closed-col': 'closed'
-};
+export function boardStatusClientId(status) {
+  return `tab:board:status:${status}`;
+}
 
 /**
- * Create the Board view with Blocked, Ready, In progress, Closed.
- * Push-only: derives items from per-subscription stores.
+ * Create the Board view with one swimlane per bd-configured status.
+ * Columns are dynamic: derived from `bd statuses` (built-in + custom) rather
+ * than hardcoded. Push-only: derives items from per-subscription stores.
  *
  * Sorting rules:
- * - Ready/Blocked/In progress: priority asc, then created_at asc.
- * - Closed: closed_at desc.
+ * - done-category columns (e.g. Closed): closed_at desc.
+ * - all other columns: priority asc, then created_at asc.
  *
  * @param {HTMLElement} mount_element
  * @param {unknown} _data - Unused (legacy param retained for call-compat)
  * @param {(id: string) => void} gotoIssue - Navigate to issue detail.
  * @param {{ getState: () => any, setState: (patch: any) => void, subscribe?: (fn: (s:any)=>void)=>()=>void }} [store]
- * @param {{ selectors: { getIds: (client_id: string) => string[], count?: (client_id: string) => number } }} [subscriptions]
  * @param {{ snapshotFor?: (client_id: string) => any[], subscribe?: (fn: () => void) => () => void }} [issueStores]
  * @param {(type: string, payload: unknown) => Promise<unknown>} [transport] - Transport function for sending updates
+ * @param {{ getStatuses: () => Promise<BoardStatus[]> }} [statusesProvider] - Source of dynamic swimlanes
  * @returns {{ load: () => Promise<void>, clear: () => void }}
  */
 export function createBoardView(
@@ -54,22 +58,28 @@ export function createBoardView(
   _data,
   gotoIssue,
   store,
-  subscriptions = undefined,
   issueStores = undefined,
-  transport = undefined
+  transport = undefined,
+  statusesProvider = undefined
 ) {
   const log = debug('views:board');
-  /** @type {IssueLite[]} */
-  let list_ready = [];
-  /** @type {IssueLite[]} */
-  let list_blocked = [];
-  /** @type {IssueLite[]} */
-  let list_in_progress = [];
-  /** @type {IssueLite[]} */
-  let list_closed = [];
-  /** @type {IssueLite[]} */
-  let list_closed_raw = [];
-  // Centralized selection helpers
+
+  /**
+   * Ordered swimlane statuses. Starts with the built-in defaults so the board
+   * renders immediately; replaced with bd's configured set on load().
+   *
+   * @type {BoardStatus[]}
+   */
+  let statuses = DEFAULT_STATUSES.slice();
+
+  /**
+   * Composed, sorted items per status name.
+   *
+   * @type {Map<string, IssueLite[]>}
+   */
+  const columns = new Map();
+
+  // Centralized selection helpers (used here for the live re-render subscribe).
   const selectors = issueStores ? createListSelectors(issueStores) : null;
 
   /**
@@ -93,27 +103,38 @@ export function createBoardView(
     }
   }
 
+  /**
+   * Whether a status column represents completed work (done category, or the
+   * canonical `closed` status). Used to pick the closed-date filter + sort.
+   *
+   * @param {BoardStatus} status
+   * @returns {boolean}
+   */
+  function isDoneColumn(status) {
+    return status.category === 'done' || status.name === 'closed';
+  }
+
   function template() {
     return html`
       <div class="panel__body board-root">
-        ${columnTemplate('Blocked', 'blocked-col', list_blocked)}
-        ${columnTemplate('Ready', 'ready-col', list_ready)}
-        ${columnTemplate('In Progress', 'in-progress-col', list_in_progress)}
-        ${columnTemplate('Closed', 'closed-col', list_closed)}
+        ${statuses.map((status) =>
+          columnTemplate(status, columns.get(status.name) || [])
+        )}
       </div>
     `;
   }
 
   /**
-   * @param {string} title
-   * @param {string} id
+   * @param {BoardStatus} status
    * @param {IssueLite[]} items
    */
-  function columnTemplate(title, id, items) {
+  function columnTemplate(status, items) {
+    const id = `status-col-${status.name}`;
     const item_count = Array.isArray(items) ? items.length : 0;
     const count_label = item_count === 1 ? '1 issue' : `${item_count} issues`;
+    const show_closed_filter = isDoneColumn(status);
     return html`
-      <section class="board-column" id=${id}>
+      <section class="board-column" id=${id} data-status=${status.name}>
         <header
           class="board-column__header"
           id=${id + '-header'}
@@ -121,12 +142,17 @@ export function createBoardView(
           aria-level="2"
         >
           <div class="board-column__title">
-            <span class="board-column__title-text">${title}</span>
+            ${status.icon
+              ? html`<span class="board-column__icon" aria-hidden="true"
+                  >${status.icon}</span
+                >`
+              : ''}
+            <span class="board-column__title-text">${status.label}</span>
             <span class="badge board-column__count" aria-label=${count_label}>
               ${item_count}
             </span>
           </div>
-          ${id === 'closed-col'
+          ${show_closed_filter
             ? html`<label class="board-closed-filter">
                 <span class="visually-hidden">Filter closed issues</span>
                 <select
@@ -254,7 +280,7 @@ export function createBoardView(
    * Update issue status via WebSocket transport.
    *
    * @param {string} issue_id
-   * @param {'open'|'in_progress'|'closed'} new_status
+   * @param {string} new_status
    */
   async function updateIssueStatus(issue_id, new_status) {
     if (!transport) {
@@ -287,10 +313,8 @@ export function createBoardView(
   function postRenderEnhance() {
     try {
       /** @type {HTMLElement[]} */
-      const columns = Array.from(
-        mount_element.querySelectorAll('.board-column')
-      );
-      for (const col of columns) {
+      const cols = Array.from(mount_element.querySelectorAll('.board-column'));
+      for (const col of cols) {
         const body = /** @type {HTMLElement|null} */ (
           col.querySelector('.board-column__body')
         );
@@ -472,15 +496,16 @@ export function createBoardView(
     }
 
     const target = /** @type {HTMLElement} */ (ev.target);
-    const col = target.closest('.board-column');
+    const col = /** @type {HTMLElement|null} */ (
+      target.closest('.board-column')
+    );
     if (!col) {
       return;
     }
 
-    const col_id = col.id;
-    const new_status = COLUMN_STATUS_MAP[col_id];
+    const new_status = col.dataset.status || '';
     if (!new_status) {
-      log('drop on unknown column: %s', col_id);
+      log('drop on column without status: %s', col.id);
       return;
     }
 
@@ -490,7 +515,7 @@ export function createBoardView(
       return;
     }
 
-    log('drop %s on %s → %s', issue_id, col_id, new_status);
+    log('drop %s on %s → %s', issue_id, col.id, new_status);
     void updateIssueStatus(issue_id, new_status);
   });
 
@@ -511,12 +536,15 @@ export function createBoardView(
   // Sort helpers centralized in app/data/sort.js
 
   /**
-   * Recompute closed list from raw using the current filter and sort.
+   * Filter raw closed items by the active closed-date filter, sorted desc.
+   *
+   * @param {IssueLite[]} raw
+   * @returns {IssueLite[]}
    */
-  function applyClosedFilter() {
-    log('applyClosedFilter %s', closed_filter_mode);
+  function filteredClosed(raw) {
+    log('filteredClosed %s', closed_filter_mode);
     /** @type {IssueLite[]} */
-    let items = Array.isArray(list_closed_raw) ? [...list_closed_raw] : [];
+    let items = Array.isArray(raw) ? [...raw] : [];
     const now = new Date();
     let since_ts = 0;
     if (closed_filter_mode === 'today') {
@@ -545,7 +573,7 @@ export function createBoardView(
       return s >= since_ts;
     });
     items.sort(cmpClosedDesc);
-    list_closed = items;
+    return items;
   }
 
   /**
@@ -564,53 +592,39 @@ export function createBoardView(
           // ignore store errors
         }
       }
-      applyClosedFilter();
-      doRender();
+      refreshFromStores();
     } catch {
       // ignore
     }
   }
 
   /**
-   * Compose lists from subscriptions + issues store and render.
+   * Compose per-status lists from the per-subscription issue stores and render.
    */
   function refreshFromStores() {
     try {
-      if (selectors) {
-        const in_progress = selectors.selectBoardColumn(
-          'tab:board:in-progress',
-          'in_progress'
-        );
-        const blocked = selectors.selectBoardColumn(
-          'tab:board:blocked',
-          'blocked'
-        );
-        const ready_raw = selectors.selectBoardColumn(
-          'tab:board:ready',
-          'ready'
-        );
-        const closed = selectors.selectBoardColumn(
-          'tab:board:closed',
-          'closed'
-        );
-
-        // Ready excludes items that are in progress
-        /** @type {Set<string>} */
-        const in_prog_ids = new Set(in_progress.map((i) => i.id));
-        const ready = ready_raw.filter((i) => !in_prog_ids.has(i.id));
-
-        list_ready = ready;
-        list_blocked = blocked;
-        list_in_progress = in_progress;
-        list_closed_raw = closed;
+      columns.clear();
+      const snapshotFor =
+        issueStores && typeof issueStores.snapshotFor === 'function'
+          ? issueStores.snapshotFor.bind(issueStores)
+          : null;
+      for (const status of statuses) {
+        /** @type {IssueLite[]} */
+        const raw = snapshotFor
+          ? /** @type {IssueLite[]} */ (
+              snapshotFor(boardStatusClientId(status.name)) || []
+            ).slice()
+          : [];
+        if (isDoneColumn(status)) {
+          columns.set(status.name, filteredClosed(raw));
+        } else {
+          raw.sort(cmpPriorityThenCreated);
+          columns.set(status.name, raw);
+        }
       }
-      applyClosedFilter();
       doRender();
     } catch {
-      list_ready = [];
-      list_blocked = [];
-      list_in_progress = [];
-      list_closed = [];
+      columns.clear();
       doRender();
     }
   }
@@ -628,96 +642,26 @@ export function createBoardView(
 
   return {
     async load() {
-      // Compose lists from subscriptions + issues store
       log('load');
-      refreshFromStores();
-      // If nothing is present yet (e.g., immediately after switching back
-      // to the Board and before list-delta arrives), fetch via data layer as
-      // a fallback so the board is not empty on initial display.
-      try {
-        const has_subs = Boolean(subscriptions && subscriptions.selectors);
-        /**
-         * @param {string} id
-         */
-        const cnt = (id) => {
-          if (!has_subs || !subscriptions) {
-            return 0;
+      // Resolve dynamic swimlanes from bd's configured statuses, then compose.
+      if (
+        statusesProvider &&
+        typeof statusesProvider.getStatuses === 'function'
+      ) {
+        try {
+          const resolved = await statusesProvider.getStatuses();
+          if (Array.isArray(resolved) && resolved.length > 0) {
+            statuses = resolved;
           }
-          const sel = subscriptions.selectors;
-          if (typeof sel.count === 'function') {
-            return Number(sel.count(id) || 0);
-          }
-          try {
-            const arr = sel.getIds(id);
-            return Array.isArray(arr) ? arr.length : 0;
-          } catch {
-            return 0;
-          }
-        };
-        const total_items =
-          cnt('tab:board:ready') +
-          cnt('tab:board:blocked') +
-          cnt('tab:board:in-progress') +
-          cnt('tab:board:closed');
-        const data = /** @type {any} */ (_data);
-        const can_fetch =
-          data &&
-          typeof data.getReady === 'function' &&
-          typeof data.getBlocked === 'function' &&
-          typeof data.getInProgress === 'function' &&
-          typeof data.getClosed === 'function';
-        if (total_items === 0 && can_fetch) {
-          log('fallback fetch');
-          /** @type {[IssueLite[], IssueLite[], IssueLite[], IssueLite[]]} */
-          const [ready_raw, blocked_raw, in_prog_raw, closed_raw] =
-            await Promise.all([
-              data.getReady().catch(() => []),
-              data.getBlocked().catch(() => []),
-              data.getInProgress().catch(() => []),
-              data.getClosed().catch(() => [])
-            ]);
-          // Normalize and map unknowns to IssueLite shape
-          /** @type {IssueLite[]} */
-          let ready = Array.isArray(ready_raw) ? ready_raw.map((it) => it) : [];
-          /** @type {IssueLite[]} */
-          const blocked = Array.isArray(blocked_raw)
-            ? blocked_raw.map((it) => it)
-            : [];
-          /** @type {IssueLite[]} */
-          const in_prog = Array.isArray(in_prog_raw)
-            ? in_prog_raw.map((it) => it)
-            : [];
-          /** @type {IssueLite[]} */
-          const closed = Array.isArray(closed_raw)
-            ? closed_raw.map((it) => it)
-            : [];
-
-          // Remove items from Ready that are already In Progress
-          /** @type {Set<string>} */
-          const in_progress_ids = new Set(in_prog.map((i) => i.id));
-          ready = ready.filter((i) => !in_progress_ids.has(i.id));
-
-          // Sort as per column rules
-          ready.sort(cmpPriorityThenCreated);
-          blocked.sort(cmpPriorityThenCreated);
-          in_prog.sort(cmpPriorityThenCreated);
-          list_ready = ready;
-          list_blocked = blocked;
-          list_in_progress = in_prog;
-          list_closed_raw = closed;
-          applyClosedFilter();
-          doRender();
+        } catch (err) {
+          log('getStatuses failed, keeping current swimlanes: %o', err);
         }
-      } catch {
-        // ignore fallback errors
       }
+      refreshFromStores();
     },
     clear() {
       mount_element.replaceChildren();
-      list_ready = [];
-      list_blocked = [];
-      list_in_progress = [];
-      list_closed = [];
+      columns.clear();
     }
   };
 }

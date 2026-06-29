@@ -1,0 +1,122 @@
+/* Inline, minimal text input for table editing */
+input.inline-edit {
+  border: none;
+  background: var(--surface);
+  padding: 0 var(--space-1);
+  margin: 0;
+  line-height: inherit;
+  font: inherit;
+  border-radius: var(--radius-xs);
+  outline: none;
+  box-shadow: 0 0 0 1px var(--border);
+}
+input.inline-edit:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0 0 3px var(--accent-ring);
+}
+
+#list-panel .panel__header input[type='search'] {
+  flex: 1;
+}
+
+/* Search input: comfortable, crisp accent focus */
+#list-panel .panel__header input[type='search']:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+/* Issues list polish */
+#list-panel .panel__body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Table list rows: dense, scannable, hairline separators */
+#list-panel tr.issue-row {
+  cursor: pointer;
+  transition:
+    background var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out);
+}
+#list-panel tr.issue-row:hover {
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
+}
+#list-panel tr.issue-row.selected {
+  background: var(--accent-subtle);
+}
+/* Crisp left accent indicator on the selected row */
+#list-panel tr.issue-row.selected td:first-child {
+  box-shadow: inset 2px 0 0 0 var(--accent);
+}
+/* Strong, readable title; muted id/meta */
+#list-panel tr.issue-row td:nth-child(3) .editable {
+  font-weight: var(--weight-medium);
+  color: var(--fg);
+}
+#list-panel tr.issue-row td.mono {
+  color: var(--muted);
+}
+
+/* Legacy card-row hooks (kept for compatibility) */
+#list-panel .panel__body li.issue-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--space-3) var(--space-6);
+  padding: var(--space-6) var(--space-9);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+  border-radius: 0;
+  cursor: pointer;
+  transition:
+    background var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out);
+}
+#list-panel .panel__body li.issue-item:hover {
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
+}
+#list-panel .panel__body li.issue-item.selected {
+  background: var(--accent-subtle);
+  box-shadow: inset 2px 0 0 0 var(--accent);
+}
+#list-panel .issue-title {
+  font-weight: var(--weight-semibold);
+  color: var(--fg);
+}
+#list-panel .issue-meta {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  margin-top: var(--space-1);
+}
+#list-panel .issue-right {
+  display: grid;
+  grid-template-rows: auto auto;
+  justify-items: end;
+  gap: var(--space-2);
+}
+#list-panel .issue-id {
+  color: var(--muted);
+  font-weight: var(--weight-semibold);
+}
+.mono {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+/* Details typography */
+#detail-panel .panel__body {
+  line-height: var(--leading-normal);
+}
+#detail-panel .panel__body h1,
+#detail-panel .panel__body h2,
+#detail-panel .panel__body h3 {
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Keyboard focus ring helper */
+:focus-visible {
+  outline: 2px solid var(--accent-ring);
+  outline-offset: var(--outline-offset-m);
+}

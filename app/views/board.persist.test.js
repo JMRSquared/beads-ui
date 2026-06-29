@@ -1,6 +1,12 @@
 import { describe, expect, test } from 'vitest';
 import { createSubscriptionIssueStore } from '../data/subscription-issue-store.js';
-import { createBoardView } from './board.js';
+import { boardStatusClientId, createBoardView } from './board.js';
+
+const CLOSED_ONLY = {
+  getStatuses: async () => [
+    { name: 'closed', category: 'done', icon: '', label: 'Closed' }
+  ]
+};
 
 function createTestIssueStores() {
   /** @type {Map<string, any>} */
@@ -56,9 +62,9 @@ describe('views/board persisted closed filter via store', () => {
       { id: 'C', closed_at: new Date(now).getTime() }
     ];
     const issueStores = createTestIssueStores();
-    issueStores.getStore('tab:board:closed').applyPush({
+    issueStores.getStore(boardStatusClientId('closed')).applyPush({
       type: 'snapshot',
-      id: 'tab:board:closed',
+      id: boardStatusClientId('closed'),
       revision: 1,
       issues
     });
@@ -99,14 +105,15 @@ describe('views/board persisted closed filter via store', () => {
       null,
       () => {},
       store,
+      issueStores,
       undefined,
-      issueStores
+      CLOSED_ONLY
     );
     await view.load();
 
     // With persisted '7' days, B and C visible (A is 8 days old)
     let closed_ids = Array.from(
-      mount.querySelectorAll('#closed-col .board-card')
+      mount.querySelectorAll('#status-col-closed .board-card')
     ).map((el) => el.getAttribute('data-issue-id'));
     expect(closed_ids).toEqual(['C', 'B']);
 
@@ -123,7 +130,7 @@ describe('views/board persisted closed filter via store', () => {
 
     // Now still B and C visible (both within 3 days)
     closed_ids = Array.from(
-      mount.querySelectorAll('#closed-col .board-card')
+      mount.querySelectorAll('#status-col-closed .board-card')
     ).map((el) => el.getAttribute('data-issue-id'));
     expect(closed_ids).toEqual(['C', 'B']);
   });

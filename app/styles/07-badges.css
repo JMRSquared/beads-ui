@@ -1,0 +1,288 @@
+/* Type badge */
+.type-badge {
+  display: inline-block;
+  padding: 0 var(--space-3);
+  line-height: 18px;
+  height: 18px;
+  border-radius: var(--badge-radius);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+.type-badge[title] {
+  cursor: default;
+}
+.type-badge + .type-badge {
+  margin-left: var(--space-2);
+}
+.type-badge--neutral {
+  background: var(--badge-bg-neutral);
+  color: var(--badge-fg-neutral);
+}
+.type-badge--bug {
+  background: var(--badge-bg-bug);
+  color: var(--badge-fg-bug);
+}
+.type-badge--feature {
+  background: var(--badge-bg-feature);
+  color: var(--badge-fg-feature);
+}
+.type-badge--task {
+  background: var(--badge-bg-task);
+  color: var(--badge-fg-task);
+}
+.type-badge--epic {
+  background: var(--badge-bg-epic);
+  color: var(--badge-fg-epic);
+}
+.type-badge--chore {
+  background: var(--badge-bg-chore);
+  color: var(--badge-fg-chore);
+}
+
+/* Generic badge base (shared look) */
+.badge,
+.status-badge,
+.priority-badge,
+.badge-select {
+  display: inline-block;
+  padding: 0 var(--space-4);
+  line-height: 18px;
+  height: 18px;
+  border-radius: var(--badge-radius);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  text-wrap: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.badge + .badge,
+.status-badge + .status-badge,
+.priority-badge + .priority-badge,
+.badge-select + .badge-select {
+  margin-left: var(--space-2);
+}
+
+/* Status + Priority palette (light) derived from base */
+:root {
+  /* Status badges */
+  --badge-bg-open: color-mix(
+    in srgb,
+    var(--panel-bg) 72%,
+    var(--status-open-base)
+  );
+  --badge-fg-open: color-mix(in srgb, var(--status-open-base) 90%, #000);
+  --badge-bg-in-progress: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--status-in-progress-base)
+  );
+  --badge-fg-in-progress: color-mix(
+    in srgb,
+    var(--status-in-progress-base) 90%,
+    #000
+  );
+  --badge-bg-closed: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--status-closed-base)
+  );
+  --badge-fg-closed: color-mix(in srgb, var(--status-closed-base) 90%, #000);
+
+  /* Priority palette mapped to provided colors */
+  /* p0 -> bug, p1 -> epic, p2 -> task, p3 -> feature, p4 -> chore */
+  --badge-bg-p0: color-mix(in srgb, var(--panel-bg) 85%, var(--type-bug-base));
+  --badge-fg-p0: color-mix(in srgb, var(--type-bug-base) 90%, #000);
+  --badge-bg-p1: color-mix(in srgb, var(--panel-bg) 72%, var(--type-epic-base));
+  --badge-fg-p1: color-mix(in srgb, var(--type-epic-base) 90%, #000);
+  --badge-bg-p2: color-mix(in srgb, var(--panel-bg) 72%, var(--type-task-base));
+  --badge-fg-p2: color-mix(in srgb, var(--type-task-base) 90%, #000);
+  --badge-bg-p3: color-mix(
+    in srgb,
+    var(--panel-bg) 72%,
+    var(--type-feature-base)
+  );
+  --badge-fg-p3: color-mix(in srgb, var(--type-feature-base) 90%, #000);
+  --badge-bg-p4: color-mix(
+    in srgb,
+    var(--panel-bg) 85%,
+    var(--type-chore-base)
+  );
+  --badge-fg-p4: color-mix(in srgb, var(--type-chore-base) 90%, #000);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --badge-bg-open: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--status-open-base)
+    );
+    --badge-fg-open: color-mix(in srgb, var(--status-open-base) 75%, #fff);
+    --badge-bg-in-progress: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--status-in-progress-base)
+    );
+    --badge-fg-in-progress: color-mix(
+      in srgb,
+      var(--status-in-progress-base) 75%,
+      #fff
+    );
+    --badge-bg-closed: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--status-closed-base)
+    );
+    --badge-fg-closed: color-mix(in srgb, var(--status-closed-base) 75%, #fff);
+
+    --badge-bg-p0: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-bug-base)
+    );
+    --badge-fg-p0: color-mix(in srgb, var(--type-bug-base) 75%, #fff);
+    --badge-bg-p1: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-epic-base)
+    );
+    --badge-fg-p1: color-mix(in srgb, var(--type-epic-base) 75%, #fff);
+    --badge-bg-p2: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-task-base)
+    );
+    --badge-fg-p2: color-mix(in srgb, var(--type-task-base) 75%, #fff);
+    --badge-bg-p3: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-feature-base)
+    );
+    --badge-fg-p3: color-mix(in srgb, var(--type-feature-base) 75%, #fff);
+    --badge-bg-p4: color-mix(
+      in srgb,
+      var(--panel-bg) 80%,
+      var(--type-chore-base)
+    );
+    --badge-fg-p4: color-mix(in srgb, var(--type-chore-base) 75%, #fff);
+  }
+}
+
+html[data-theme='dark'] {
+  --badge-bg-open: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--status-open-base)
+  );
+  --badge-fg-open: color-mix(in srgb, var(--status-open-base) 75%, #fff);
+  --badge-bg-in-progress: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--status-in-progress-base)
+  );
+  --badge-fg-in-progress: color-mix(
+    in srgb,
+    var(--status-in-progress-base) 75%,
+    #fff
+  );
+  --badge-bg-closed: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--status-closed-base)
+  );
+  --badge-fg-closed: color-mix(in srgb, var(--status-closed-base) 75%, #fff);
+
+  --badge-bg-p0: color-mix(in srgb, var(--panel-bg) 80%, var(--type-bug-base));
+  --badge-fg-p0: color-mix(in srgb, var(--type-bug-base) 75%, #fff);
+  --badge-bg-p1: color-mix(in srgb, var(--panel-bg) 80%, var(--type-epic-base));
+  --badge-fg-p1: color-mix(in srgb, var(--type-epic-base) 75%, #fff);
+  --badge-bg-p2: color-mix(in srgb, var(--panel-bg) 80%, var(--type-task-base));
+  --badge-fg-p2: color-mix(in srgb, var(--type-task-base) 75%, #fff);
+  --badge-bg-p3: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--type-feature-base)
+  );
+  --badge-fg-p3: color-mix(in srgb, var(--type-feature-base) 75%, #fff);
+  --badge-bg-p4: color-mix(
+    in srgb,
+    var(--panel-bg) 80%,
+    var(--type-chore-base)
+  );
+  --badge-fg-p4: color-mix(in srgb, var(--type-chore-base) 75%, #fff);
+}
+
+.status-badge.is-open,
+.badge-select.badge--status.is-open {
+  background: var(--badge-bg-open);
+  color: var(--badge-fg-open);
+}
+.status-badge.is-in_progress,
+.badge-select.badge--status.is-in_progress {
+  background: var(--badge-bg-in-progress);
+  color: var(--badge-fg-in-progress);
+}
+.status-badge.is-closed,
+.badge-select.badge--status.is-closed {
+  background: var(--badge-bg-closed);
+  color: var(--badge-fg-closed);
+}
+
+.priority-badge.is-p0,
+.badge-select.badge--priority.is-p0 {
+  background: var(--badge-bg-p0);
+  color: var(--badge-fg-p0);
+}
+.priority-badge.is-p1,
+.badge-select.badge--priority.is-p1 {
+  background: var(--badge-bg-p1);
+  color: var(--badge-fg-p1);
+}
+.priority-badge.is-p2,
+.badge-select.badge--priority.is-p2 {
+  background: var(--badge-bg-p2);
+  color: var(--badge-fg-p2);
+}
+.priority-badge.is-p3,
+.badge-select.badge--priority.is-p3 {
+  background: var(--badge-bg-p3);
+  color: var(--badge-fg-p3);
+}
+.priority-badge.is-p4,
+.badge-select.badge--priority.is-p4 {
+  background: var(--badge-bg-p4);
+  color: var(--badge-fg-p4);
+}
+
+/* Make selects look like badges while keeping the native arrow */
+.badge-select {
+  appearance: none;
+  border: none;
+  padding: 0 var(--space-9) 0 var(--space-4); /* room for arrow */
+  height: 20px;
+  line-height: 18px;
+  background-clip: padding-box;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7l5 5 5-5H5z' fill='%23808080'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  background-size: 12px 12px;
+  transition:
+    box-shadow var(--dur-2) var(--ease-out),
+    background-color var(--dur-2) var(--ease-out);
+}
+.badge-select:focus,
+.badge-select:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}

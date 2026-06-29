@@ -1,0 +1,67 @@
+.app-shell {
+  /* Fill remaining viewport height below sticky header */
+  height: calc(100% - 53px);
+}
+
+/* Route shells */
+.route {
+  min-height: 0; /* allow children to scroll */
+}
+
+/* Board route: fill height and let columns scroll */
+.route {
+  &.board {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+    max-height: 100%;
+
+    .panel__body {
+      flex: 1;
+      min-height: 0;
+      overflow-x: auto; /* scroll columns horizontal */
+    }
+  }
+}
+
+.panel {
+  min-height: 0;
+  overflow: visible;
+}
+
+.panel__body {
+  overflow: auto;
+}
+.panel + .panel {
+  border-left: 1px solid var(--border);
+}
+
+.panel__header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-3) var(--space-4);
+  overflow: visible;
+}
+
+#detail-panel .panel__header {
+  padding-left: var(--space-9);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.text-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

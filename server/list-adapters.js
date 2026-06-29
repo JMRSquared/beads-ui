@@ -28,6 +28,22 @@ export function mapSubscriptionToBdArgs(spec) {
     case 'in-progress-issues': {
       return ['list', '--json', '--tree=false', '--status', 'in_progress'];
     }
+    case 'status-issues': {
+      const p = spec.params || {};
+      const status = String(p.status || '').trim();
+      if (status.length === 0) {
+        throw badRequest('Missing param: params.status');
+      }
+      return [
+        'list',
+        '--json',
+        '--tree=false',
+        '--status',
+        status,
+        '--limit',
+        '1000'
+      ];
+    }
     case 'closed-issues': {
       return [
         'list',

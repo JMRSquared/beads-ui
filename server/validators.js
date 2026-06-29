@@ -16,6 +16,7 @@ const SUBSCRIPTION_TYPES = new Set([
   'ready-issues',
   'in-progress-issues',
   'closed-issues',
+  'status-issues',
   'issue-detail'
 ]);
 
@@ -82,6 +83,16 @@ export function validateSubscribeListPayload(payload) {
       };
     }
     params = { id };
+  } else if (type === 'status-issues') {
+    const status = String(params?.status ?? '').trim();
+    if (status.length === 0) {
+      return {
+        ok: false,
+        code: 'bad_request',
+        message: 'params.status must be a non-empty string'
+      };
+    }
+    params = { status };
   } else if (type === 'closed-issues') {
     if (params && 'since' in params) {
       const since = params.since;

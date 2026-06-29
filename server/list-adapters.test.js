@@ -57,6 +57,26 @@ describe('list adapters for subscription types', () => {
     ]);
   });
 
+  test('mapSubscriptionToBdArgs returns args for status-issues', () => {
+    const args = mapSubscriptionToBdArgs({
+      type: 'status-issues',
+      params: { status: 'in_review' }
+    });
+    expect(args).toEqual([
+      'list',
+      '--json',
+      '--tree=false',
+      '--status',
+      'in_review',
+      '--limit',
+      '1000'
+    ]);
+  });
+
+  test('mapSubscriptionToBdArgs throws for status-issues without status', () => {
+    expect(() => mapSubscriptionToBdArgs({ type: 'status-issues' })).toThrow();
+  });
+
   test('mapSubscriptionToBdArgs returns args for issue-detail', () => {
     const args = mapSubscriptionToBdArgs({
       type: 'issue-detail',
